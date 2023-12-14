@@ -1,20 +1,26 @@
-import { useState } from 'react'
+import { useId } from 'react'
 import './Filters.css'
+import { useFilters } from '../hooks/useFilters.js'
 
 // eslint-disable-next-line react/prop-types
-export function Filters ({ onChange }) {
-    const [minPrice, setMinPrice] = useState(0)
+export function Filters () {
+
+    const { filters, setFilters } = useFilters()
+
+    // useId = es un identificador de react que se resume en que puede ser
+    // util en los identificadores unicos de una API o Base de datos
+    const minPriceFilterId = useId()
+    const categoryFilterId = useId()
 
     const handleChangeMinPrice = (event)=> {
-        setMinPrice(event.target.value)
-        onChange(prevState => ({
+        setFilters(prevState => ({
             ...prevState,
             minPrice: event.target.value
         }))
     }
 
     const handleChangeCategory = (event)=> {
-        onChange(prevState => ({
+        setFilters(prevState => ({
             ...prevState,
             category: event.target.value
         }))
@@ -23,19 +29,20 @@ export function Filters ({ onChange }) {
     return (
         <section className='filters'>
             <div>
-                <label htmlFor="price">Precio a partir de: </label>
+                <label htmlFor={minPriceFilterId}>Precio a partir de: </label>
                 <input 
                     type="range"
-                    id = "price"
+                    id = {minPriceFilterId}
                     min='0'
                     max='1000'
                     onChange={handleChangeMinPrice}
+                    value={filters.minPrice}
                 />
-                <span>${minPrice}</span>
+                <span>${filters.minPrice}</span>
             </div>
             <div>
-                <label htmlFor="category">Categoria</label>
-                <select id="category" onChange={handleChangeCategory}>
+                <label htmlFor={categoryFilterId}>Categoria</label>
+                <select id={categoryFilterId} onChange={handleChangeCategory}>
                     <option value='all'>Todas</option>
                     <option value='laptops'>Portatiles</option>
                     <option value='smartphones'>Celulares</option>
